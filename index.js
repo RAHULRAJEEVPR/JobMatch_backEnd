@@ -1,35 +1,22 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const app = express();
 require("dotenv").config();
 let cors = require("cors");
+const dbConfig=require("./config/dbConfig")
 const cookieParser=require("cookie-parser")
+const userRoute=require("./routes/userRoutes")
 
-//database connection
-mongoose
-  .connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("DB connition sucessfull");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-  //middlewares
- app.use(express.urlencoded({extended:true}))
- 
+//middlewares
+app.use(express.urlencoded({extended:true}))
+app.use(express.json())
 
 
-
-
-
-
-
-
-
+app.use(cors({
+  origin: ["http://localhost:5173"],
+  methods: ["GET", "POST"],
+  credentials: true
+}))
+app.use("/user",userRoute)
 
 
 //port
