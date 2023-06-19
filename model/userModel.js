@@ -12,9 +12,11 @@ const userSchema=new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    image:{
+        type:String,
+        
     }
-    },{
-        timestap:true
     })  
 
     const userModel=mongoose.model("users",userSchema)
