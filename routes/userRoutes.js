@@ -6,7 +6,8 @@ const{
     userLogin,
     userDetails,
     userGoogleRegister,
-    userGoogleLogin
+    userGoogleLogin,
+    verification
 }=require("../controllers/userController")
 
 router.post("/register",userRegister)
@@ -14,5 +15,6 @@ router.post("/googleRegister",userGoogleRegister)
 router.post("/googleLogin",userGoogleLogin)
 router.post("/Login",userLogin)
 router.get("/userinfo",userAuthentication,userDetails)
+router.get("/:id/verify/:token", verification)
 
 module.exports=router;
