@@ -5,6 +5,7 @@ let cors = require("cors");
 const dbConfig=require("./config/dbConfig")
 const cookieParser=require("cookie-parser")
 const userRoute=require("./routes/userRoutes")
+const empRouter=require("./routes/employerRoutes")
 
 //middlewares
 app.use(express.urlencoded({extended:true}))
@@ -17,6 +18,7 @@ app.use(cors({
   credentials: true
 }))
 app.use("/user",userRoute)
+app.use("/employer",empRouter)
 
 
 //port
