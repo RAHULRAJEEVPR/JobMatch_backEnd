@@ -166,13 +166,13 @@ const userGoogleLogin = async (req, res) => {
     res.status(500).json({ error: error.message, login: false });
   }
 };
-const userDetails = async (req, res) => {
+const isUserAuth = async (req, res) => {
   try {
     console.log("vanno");
     const userData = await userModel.findOne({ _id: req.userId });
     if (!userData) {
       return res
-        .status(200)
+        .status(404)
         .json({ message: "user does not exists", success: false });
     } else {
       return res.status(200).json({ success: true, userData: userData });
@@ -183,10 +183,26 @@ const userDetails = async (req, res) => {
   }
 };
 
+// const isUserAuth=async(req,res)=>{
+//   try {
+//     const id=req.userId
+//     const user=await userModel.findOne({_id:id})
+//     if(!user){
+//       res.status(404).json({ auth: false })
+
+//     }else{
+//       res.status(200).json({ auth: true, userDeatils: user })
+
+//     }
+//   } catch (error) {
+    
+//   }
+// }
+
 module.exports = {
   userRegister,
   userLogin,
-  userDetails,
+  isUserAuth,
   userGoogleRegister,
   userGoogleLogin,
   verification,

@@ -47,7 +47,7 @@ const empRegister = async (req, res) => {
 
   const verification = async (req, res) => {
     try {
-      console.log("chakka");
+      
       const user = await empModel.findOne({ _id: req.params.id });
       if (!user) {
         return res.status(400).json({ message: "invalid link" });
@@ -71,10 +71,12 @@ const empRegister = async (req, res) => {
   
   const empGoogleRegister = async (req, res) => {
     try {
+      
       let { name, email, id, picture } = req.body;
   
       const exists = await empModel.findOne({ email: email });
       if (exists) {
+        console.log(exists);
         return res
           .status(200)
           .json({ exists: true, message: "email already exists" });
@@ -132,7 +134,7 @@ const empRegister = async (req, res) => {
         });
         res
           .status(200)
-          .json({ login: true, message: "login successful", token: token });
+          .json({ login: true, message: "login successful",  });
       }
     } catch (error) {
       console.log(error.message);

@@ -3,22 +3,24 @@ const app = express();
 require("dotenv").config();
 let cors = require("cors");
 const dbConfig=require("./config/dbConfig")
-const cookieParser=require("cookie-parser")
+//const cookieParser=require("cookie-parser")
 const userRoute=require("./routes/userRoutes")
 const empRouter=require("./routes/employerRoutes")
+const adminRouter=require("./routes/adminRouter")
 
 //middlewares
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 
 
-app.use(cors({
+app.use(cors({ 
   origin: ["http://localhost:5173"],
   methods: ["GET", "POST"],
   credentials: true
 }))
 app.use("/user",userRoute)
 app.use("/employer",empRouter)
+app.use("/admin",adminRouter)
 
 
 //port

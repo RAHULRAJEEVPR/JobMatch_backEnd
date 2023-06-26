@@ -4,7 +4,7 @@ const {userAuthentication}=require("../middilewares/userAuth")
 const{
     userRegister,
     userLogin,
-    userDetails,
+    isUserAuth,
     userGoogleRegister,
     userGoogleLogin,
     verification
@@ -14,7 +14,7 @@ router.post("/register",userRegister)
 router.post("/googleRegister",userGoogleRegister)
 router.post("/googleLogin",userGoogleLogin)
 router.post("/Login",userLogin)
-router.get("/userinfo",userAuthentication,userDetails)
+router.get("/userAuth",userAuthentication,isUserAuth)
 router.get("/:id/verify/:token", verification)
 
 module.exports=router;
