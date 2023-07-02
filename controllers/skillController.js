@@ -29,7 +29,7 @@ const skillDetails = async (req, res) => {
   try {
     const skillData = await skillsModel.find({});
     if (skillData) {
-      console.log(skillData);
+     
       res.status(200).json({ data: true, message: " succesfull", skillData });
     } else {
       res
@@ -59,11 +59,11 @@ const dropSkill = async (req, res) => {
           droped: false,
         });
     }
-    console.log(id);
   } catch (error) {
     res.status(500).json({ error: error.message, droped: false });
   }
 };
+
 
 module.exports = {
   addSkill,

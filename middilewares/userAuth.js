@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 
 module.exports.userAuthentication = async (req, res, next) => {
   try {
-    console.log("ivide vanno");
+   
+
     const token = req.headers["authorization"].split(" ")[1];
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {

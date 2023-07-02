@@ -16,14 +16,14 @@ const { addSkill,
   }=require("../controllers/cityController")
 
 router.post("/login", adminLogin);
-router.get("/userDetails", userDetails);
-router.get("/empDetails", empDetails);
-router.get("/skillDetails", skillDetails);
-router.post("/addskill", addSkill);
-router.post("/dropskill", dropSkill);
-router.post("/addcity",addCity);
-router.get("/cityDetails",cityDetails)
-router.post("/dropcity",dropCity)
+router.get("/userDetails",adminAuthentication , userDetails);
+router.get("/empDetails",adminAuthentication , empDetails);
+router.get("/skillDetails",adminAuthentication , skillDetails);
+router.post("/addskill",adminAuthentication , addSkill);
+router.post("/dropskill",adminAuthentication , dropSkill);
+router.post("/addcity",adminAuthentication ,addCity);
+router.get("/cityDetails",adminAuthentication ,cityDetails)
+router.post("/dropcity",adminAuthentication ,dropCity)
 router.get("/adminAuth", adminAuthentication, adminAuth);
 
 module.exports = router;

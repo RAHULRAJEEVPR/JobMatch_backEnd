@@ -3,7 +3,6 @@ const cityModel = require("../model/cityModal");
 const addCity = async (req, res) => {
   try {
     const { city } = req.body;
-    console.log(city);
     const regex = new RegExp(city, "i");
     const exists = await cityModel.findOne({ city: regex });
     if (exists) {
@@ -28,7 +27,7 @@ const cityDetails = async (req, res) => {
   try {
     const cityData = await cityModel.find({});
     if (cityData) {
-      console.log(cityData);
+     
       res.status(200).json({ data: true, message: " succesfull", cityData });
     } else {
       res
