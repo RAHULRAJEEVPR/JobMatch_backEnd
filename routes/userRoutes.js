@@ -9,7 +9,7 @@ const{
     userGoogleLogin,
     verification
 }=require("../controllers/userController")
-const {userGetAllPosts}=require("../controllers/postController")
+const {userGetAllPosts,singleJobDetails}=require("../controllers/postController")
 const { cityDetails } = require("../controllers/cityController");
 const { skillDetails } = require("../controllers/skillController");
 
@@ -24,6 +24,7 @@ router.get("/userAuth",userAuthentication,isUserAuth)
 router.get("/getallpost",userAuthentication,userGetAllPosts)
 router.get("/citydetails",userAuthentication,cityDetails)
 router.get("/skilldata",userAuthentication,skillDetails)
+router.get("/jobdetaileview/:id",userAuthentication,singleJobDetails)
 
 
 module.exports=router;

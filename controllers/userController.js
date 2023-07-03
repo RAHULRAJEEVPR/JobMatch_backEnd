@@ -46,8 +46,9 @@ const userRegister = async (req, res) => {
 
 const verification = async (req, res) => {
   try {
-    console.log("chakka");
+    console.log("verfiy");
     const user = await userModel.findOne({ _id: req.params.id });
+    console.log(user);
     if (!user) {
       return res.status(400).json({ message: "invalid link" });
     }
@@ -55,6 +56,7 @@ const verification = async (req, res) => {
       userId: user._id,
       token: req.params.token,
     });
+    console.log(token);
     if (!token) {
       return res.status(400).json({ message: "invalid Link" });
     }
@@ -127,7 +129,7 @@ const userLogin = async (req, res) => {
       });
     } else {
       const token = jwt.sign({ id: userData._id }, process.env.JWT_SECRET, {
-        expiresIn: 300000,
+        expiresIn: 3000000,
       });
       res
         .status(200)
@@ -183,21 +185,7 @@ const isUserAuth = async (req, res) => {
   }
 };
 
-// const isUserAuth=async(req,res)=>{
-//   try {
-//     const id=req.userId
-//     const user=await userModel.findOne({_id:id})
-//     if(!user){
-//       res.status(404).json({ auth: false })
 
-//     }else{
-//       res.status(200).json({ auth: true, userDeatils: user })
-
-//     }
-//   } catch (error) {
-    
-//   }
-// }
 
 module.exports = {
   userRegister,

@@ -67,8 +67,28 @@ const userGetAllPosts=async(req,res)=>{
   }
 }
 
+const singleJobDetails=async(req,res)=>{
+  try {
+    const id=req.params.id
+    console.log("vannnue",id);
+    let postData=await postModel.findOne({_id:id}).populate("empId")
+    
+    if (postData) {
+      res.status(200).json({ data: true, message: "data obtained",postData })    
+    }else{
+      res.status(404).json({data:false, message: "no post found",})    
+    }
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
+  }
+  }
+  
+
 module.exports = {
   createPost,
   getPostData,
-  userGetAllPosts
+  userGetAllPosts,
+  singleJobDetails
 }
