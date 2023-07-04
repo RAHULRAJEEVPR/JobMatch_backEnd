@@ -1,4 +1,5 @@
 const postModel = require("../model/postModel");
+const {uploadToCloudinary}=require("../config/cloudinary")
 
 
 // empoyer apis
@@ -85,10 +86,47 @@ const singleJobDetails=async(req,res)=>{
   }
   }
   
+  const applyJob=async(req,res)=>{
+    try {
+    const resume =req.file.path
+    const {postId,coverLetter}=req.body
+   const data=   await uploadToCloudinary(resume,"resumes")
+  
+let post=await postModel.findOne({_id:postId})
+if(post){
+  const existingApplicant = post.applicants.find(
+    (applicant) => applicant.applicant.toString() === req.userId
+  );
+  if (existingApplicant){
+    return res.status(400).json({ success: true, message: "Alredy Applied" })    
+
+  }
+}
+const newapplicant={
+  applicant: req.userId,
+  status: "pending",
+  coverLetter: coverLetter,
+  resumeUrl: data.url,
+  resumePublicId: data.public_id
+}
+
+post.applicants.push(newapplicant)
+await post.save();
+
+return res.status(200).json({ success: true, message: "Applyed successfully",post })    
+
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false, message:"something went wrong" ,post })    
+
+    }
+  }
 
 module.exports = {
   createPost,
   getPostData,
   userGetAllPosts,
-  singleJobDetails
+  singleJobDetails,
+  applyJob
 }
