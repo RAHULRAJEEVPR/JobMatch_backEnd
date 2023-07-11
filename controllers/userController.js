@@ -90,6 +90,7 @@ const userGoogleRegister = async (req, res) => {
       password: password,
       image: picture,
       verified: true,
+      isGoogle: true,
     });
 
     await newUser.save().then(console.log("updated"));
@@ -131,9 +132,12 @@ const userLogin = async (req, res) => {
       const token = jwt.sign({ id: userData._id }, process.env.JWT_SECRET, {
         expiresIn: 3000000,
       });
-      res
-        .status(200)
-        .json({ login: true, message: "login successful", token: token });
+      res.status(200).json({
+        login: true,
+        message: "login successful",
+        token: token,
+        userData,
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -159,9 +163,12 @@ const userGoogleLogin = async (req, res) => {
       const token = jwt.sign({ id: userData._id }, process.env.JWT_SECRET, {
         expiresIn: 300000,
       });
-      res
-        .status(200)
-        .json({ login: true, message: "login successful", token: token });
+      res.status(200).json({
+        login: true,
+        message: "login successful",
+        token: token,
+        userData,
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -185,7 +192,171 @@ const isUserAuth = async (req, res) => {
   }
 };
 
+const updateUserAbout = async (req, res) => {
+  try {
+    const { about } = req.body;
+    let userData = await userModel.findOneAndUpdate(
+      { _id: req.userId },
+      { $set: { about: about } },
+      { new: true }
+    );
+    console.log(userData);
+    return res.status(200).json({ success: true, userData: userData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+const addUserExp = async (req, res) => {
+  try {
+    const { exp, role, company } = req.body;
+    console.log(exp);
+    let userData = await userModel.findOne({ _id: req.userId });
+    const newExp = {
+      role: role,
+      company: company,
+      exp: exp,
+    };
+    console.log(newExp);
+    userData.workExp.push(newExp);
+    await userData.save();
+    console.log(userData);
+    return res.status(200).json({ success: true, userData: userData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+const addUserSkill = async (req, res) => {
+  try {
+    const skill = req.body;
+    console.log(req.body);
+    let userData = await userModel.findOne({ _id: req.userId });
+    const newSkills = skill.filter((skill) => !userData.skills.includes(skill));
+    userData.skills.push(...skill);
+    await userData.save();
+    console.log(userData);
+    return res.status(200).json({ success: true, userData: userData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
 
+const dropUserSkill = async (req, res) => {
+  try {
+    let { skill } = req.body;
+    const userId = req.userId;
+
+    const userData = await userModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { skills: skill } },
+      { new: true }
+    );
+
+    return res.status(200).json({ success: true, userData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+
+const addUserEdu = async (req, res) => {
+  try {
+    const { course, Institute } = req.body;
+    console.log(course);
+    let userData = await userModel.findOne({ _id: req.userId });
+    const newEdu = {
+      course: course,
+      institute: Institute,
+    };
+
+    userData.education.push(newEdu);
+    await userData.save();
+    console.log(userData);
+    return res.status(200).json({ success: true, userData: userData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+
+const dropUserExp = async (req, res) => {
+  try {
+    let { id } = req.body;
+    const userId = req.userId;
+
+    const userData = await userModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { workExp: { _id: id } } },
+      { new: true }
+    );
+    console.log(userData);
+    return res.status(200).json({ success: true, userData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+const dropUserEdu = async (req, res) => {
+  try {
+    let { id } = req.body;
+    const userId = req.userId;
+
+    const userData = await userModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { education: { _id: id } } },
+      { new: true }
+    );
+    console.log(userData);
+    return res.status(200).json({ success: true, userData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+
+const updateUserBasicInfo = async (req, res) => {
+  try {
+    const { Location, Phone } = req.body;
+
+    const userId = req.userId;
+
+    const userData = await userModel.findOneAndUpdate(
+      { _id: userId },
+      { $set: { location: Location, phone: Phone } },
+      { new: true }
+    );
+    // console.log(userData);
+    return res.status(200).json({ success: true, userData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    const { currPass, newPass } = req.body;
+    const userData =await userModel.findOne({ _id: req.userId });
+   
+    const isMatch = await bcrypt.compare(currPass, userData.password);
+    if (isMatch) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPass, salt);
+      await userModel
+        .updateOne({ _id: req.userId }, { $set: { password: hashedPassword } })
+        .then(() => {
+          return res
+            .status(200)
+            .json({ success: true, message: "Password Changed Successfully" });
+        });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
 
 module.exports = {
   userRegister,
@@ -194,4 +365,13 @@ module.exports = {
   userGoogleRegister,
   userGoogleLogin,
   verification,
+  updateUserAbout,
+  addUserExp,
+  addUserSkill,
+  dropUserSkill,
+  addUserEdu,
+  dropUserExp,
+  dropUserEdu,
+  updateUserBasicInfo,
+  changePassword,
 };

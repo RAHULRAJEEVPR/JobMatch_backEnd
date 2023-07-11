@@ -8,6 +8,15 @@ const {
   userGoogleRegister,
   userGoogleLogin,
   verification,
+  updateUserAbout,
+  addUserExp,
+  addUserSkill,
+  dropUserSkill,
+  addUserEdu,
+  dropUserExp,
+  dropUserEdu,
+  updateUserBasicInfo,
+  changePassword
 } = require("../controllers/userController");
 const {
   userGetAllPosts,
@@ -29,5 +38,14 @@ router.get("/citydetails", userAuthentication, cityDetails);
 router.get("/skilldata", userAuthentication, skillDetails);
 router.get("/jobdetaileview/:id", userAuthentication, singleJobDetails);
 router.post("/applyjob", userAuthentication,upload.single("resume"),applyJob)
+router.post("/updateUserAbout", userAuthentication,updateUserAbout)
+router.post("/addUserExp", userAuthentication,addUserExp)
+router.post("/addUserSkill", userAuthentication,addUserSkill)
+router.post("/dropUserSkill", userAuthentication,dropUserSkill)
+router.post("/addUserEdu", userAuthentication,addUserEdu)
+router.post("/dropUserExp", userAuthentication,dropUserExp)
+router.post("/dropUserEdu", userAuthentication,dropUserEdu)
+router.post("/updateUserBasicInfo", userAuthentication,updateUserBasicInfo)
+router.post("/changeUserPassword", userAuthentication,changePassword)
 
 module.exports = router;
