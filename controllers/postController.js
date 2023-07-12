@@ -90,7 +90,7 @@ const singleJobDetails=async(req,res)=>{
     try {
     const resume =req.file.path
     const {postId,coverLetter}=req.body
-   const data=   await uploadToCloudinary(resume,"resumes")
+  
   
 let post=await postModel.findOne({_id:postId})
 if(post){
@@ -102,6 +102,7 @@ if(post){
 
   }
 }
+const data=   await uploadToCloudinary(resume,"resumes")
 const newapplicant={
   applicant: req.userId,
   status: "pending",

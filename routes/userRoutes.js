@@ -16,7 +16,8 @@ const {
   dropUserExp,
   dropUserEdu,
   updateUserBasicInfo,
-  changePassword
+  changePassword,
+  changeUserImg
 } = require("../controllers/userController");
 const {
   userGetAllPosts,
@@ -47,5 +48,6 @@ router.post("/dropUserExp", userAuthentication,dropUserExp)
 router.post("/dropUserEdu", userAuthentication,dropUserEdu)
 router.post("/updateUserBasicInfo", userAuthentication,updateUserBasicInfo)
 router.post("/changeUserPassword", userAuthentication,changePassword)
+router.post("/changeUserImage", userAuthentication,upload.single("image"),changeUserImg)
 
 module.exports = router;

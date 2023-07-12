@@ -23,16 +23,19 @@ const userSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  imageId: {
+    type: String,
+  },
   about: {
     type: String,
     default: "No about added",
-    required:true
+    required: true,
   },
-  phone:{
-    type:Number,
+  phone: {
+    type: Number,
   },
-  isGoogle:{
-    type:Boolean,
+  isGoogle: {
+    type: Boolean,
   },
   workExp: [
     {

@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const tokenModel = require("../model/token");
 const sendMail = require("../utils/nodeMailer");
 const crypto = require("crypto");
+const {uploadToCloudinary,removeFromCloudinary}=require("../config/cloudinary")
+
 
 const userRegister = async (req, res) => {
   try {
@@ -318,13 +320,13 @@ const dropUserEdu = async (req, res) => {
 
 const updateUserBasicInfo = async (req, res) => {
   try {
-    const { Location, Phone } = req.body;
+    const { Location, Phone,name } = req.body;
 
     const userId = req.userId;
 
     const userData = await userModel.findOneAndUpdate(
       { _id: userId },
-      { $set: { location: Location, phone: Phone } },
+      { $set: { location: Location, phone: Phone,name:name } },
       { new: true }
     );
     // console.log(userData);
@@ -338,8 +340,8 @@ const updateUserBasicInfo = async (req, res) => {
 const changePassword = async (req, res) => {
   try {
     const { currPass, newPass } = req.body;
-    const userData =await userModel.findOne({ _id: req.userId });
-   
+    const userData = await userModel.findOne({ _id: req.userId });
+
     const isMatch = await bcrypt.compare(currPass, userData.password);
     if (isMatch) {
       const salt = await bcrypt.genSalt(10);
@@ -355,6 +357,37 @@ const changePassword = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+
+const changeUserImg = async (req, res) => {
+  try {
+    
+    const userId = req.userId;
+
+    const image = req.file.path;
+    let user = await userModel.findOne({ _id: userId });
+    console.log(user);
+    if (user.imageId) {
+      const responseData = await removeFromCloudinary(user.imageId);
+    }
+    const data = await uploadToCloudinary(image, "profilePictures");
+
+    if(data){
+      console.log(data);
+      const userData = await userModel.findOneAndUpdate(
+        { _id: userId },
+        { $set: { image: data.url, imageId: data.public_id } },
+        { new: true }
+      );
+      return res
+      .status(200)
+      .json({ success: true, userData });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" }); 
+
   }
 };
 
@@ -374,4 +407,5 @@ module.exports = {
   dropUserEdu,
   updateUserBasicInfo,
   changePassword,
+  changeUserImg,
 };
