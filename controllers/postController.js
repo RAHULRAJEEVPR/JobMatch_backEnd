@@ -8,7 +8,7 @@ const {uploadToCloudinary}=require("../config/cloudinary")
 const createPost = async (req, res) => {
   try {
     console.log(req.body);
-    const { role, location, jobType, ctc, exp, vacancy, description, skills } =
+    const { role, location, jobType, ctc, exp, vacancy, description, skills ,additionalSkills} =
       req.body;
     const newPost = new postModel({
       role,
@@ -19,6 +19,7 @@ const createPost = async (req, res) => {
       minimumExp: exp,
       vacancy: vacancy,
       skills: skills,
+      additionalSkills:additionalSkills,
       jobDescription: description,
     });
     let post = await newPost

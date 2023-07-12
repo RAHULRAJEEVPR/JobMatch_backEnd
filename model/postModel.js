@@ -28,6 +28,11 @@ const postSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  additionalSkills:{
+    type:Array,
+    required:true,
+    default:[]
+  },
   empId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "employers",
