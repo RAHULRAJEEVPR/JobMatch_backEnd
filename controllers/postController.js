@@ -21,7 +21,7 @@ const createPost = async (req, res) => {
       skills: skills,
       additionalSkills:additionalSkills,
       jobDescription: description,
-    });
+    })
     let post = await newPost
       .save()
       .then(console.log("new post created"))
@@ -34,6 +34,56 @@ const createPost = async (req, res) => {
     return res.status(500).json({ error: true, message: error.message });
   }
 };
+
+
+const editPost = async (req, res) => {
+  try {
+ 
+    const {id, role, location, jobType, ctc, exp, vacancy, description, skills, additionalSkills } = req.body;
+
+    // Retrieve the post ID from the request parameters or body
+    
+
+    // Check if the post ID is provided
+    if (!id) {
+      return res.status(400).json({ error: true, message: "Post ID is required" });
+    }
+
+    // Find the post by ID
+    const post = await postModel.findById(id);
+
+    if (!post) {
+      return res.status(404).json({ error: true, message: "Post not found" });
+    }
+
+    // Update the post fields
+    post.role = role;
+    post.location = location;
+    post.jobtype = jobType;
+    post.ctc = ctc;
+    post.minimumExp = exp;
+    post.vacancy = vacancy;
+    post.skills = skills;
+    post.additionalSkills = additionalSkills;
+    post.jobDescription = description;
+
+    // Save the updated post
+    await post.save();
+
+    console.log("Post updated successfully");
+    res.status(200).json({ success: true, message: "Post updated successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
+
+
+
+
+
+
+
 //employer all active post data
 const getPostData=async(req,res)=>{
   try {
@@ -125,10 +175,13 @@ return res.status(200).json({ success: true, message: "Applyed successfully",pos
     }
   }
 
+
+
 module.exports = {
   createPost,
   getPostData,
   userGetAllPosts,
   singleJobDetails,
-  applyJob
+  applyJob,
+  editPost
 }
