@@ -90,10 +90,12 @@ const editPost = async (req, res) => {
 
     let empId = req.empId;
     let postData = await postModel.find({ empId: empId }).populate("empId");
-    if(postData){
-      return res
-      .status(200)
-      .json({ success: true, message: "Post updated successfully",postData });
+    if (postData) {
+      return res.status(200).json({
+        success: true,
+        message: "Post updated successfully",
+        postData,
+      });
     }
   } catch (error) {
     console.log(error);
@@ -111,12 +113,13 @@ const deletePost = async (req, res) => {
     }
     let id = req.empId;
     let postData = await postModel.find({ empId: id }).populate("empId");
-    if(postData){
-      return res
-      .status(200)
-      .json({ success: true, message: "Post updated successfully",postData });
+    if (postData) {
+      return res.status(200).json({
+        success: true,
+        message: "Post updated successfully",
+        postData,
+      });
     }
-  
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: true, message: error.message });
@@ -213,6 +216,53 @@ const applyJob = async (req, res) => {
   }
 };
 
+const getSinglePostData = async (req, res) => {
+  try {
+    let postId = req.params.postId;
+    const postData = await postModel
+      .findOne({ _id: postId })
+      .populate("applicants.applicant");
+    if (postData) {
+      return res
+        .status(200)
+        .json({ success: true, message: "data obtained", postData });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "data not found" });
+    }
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ success: false, message: "something went wrong", post });
+  }
+};
+const changeApplicationStatus = async (req, res) => {
+  try {
+    console.log(req.params);
+    const { postId, userId, newStatus } = req.params;
+
+    let postData = await postModel
+      .findOneAndUpdate(
+        { _id: postId, "applicants._id": userId },
+        { $set: { "applicants.$.status": newStatus } },
+        { new: true }
+      )
+      .populate("applicants.applicant");
+    if (!postData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "post not found" });
+    }
+    return res
+      .status(200)
+      .json({ success: true, message: "updated successfully", postData });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   createPost,
   getPostData,
@@ -221,4 +271,6 @@ module.exports = {
   applyJob,
   editPost,
   deletePost,
+  getSinglePostData,
+  changeApplicationStatus,
 };

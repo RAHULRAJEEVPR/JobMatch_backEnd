@@ -1,4 +1,5 @@
 const empModel =require("../model/empModel")
+const userModel=require("../model/userModel")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const tokenModel = require("../model/token");
@@ -171,11 +172,34 @@ const empRegister = async (req, res) => {
   };
 
 
+
+  const getUserData=async(req,res)=>{
+try {
+  let userId=req.params.userId
+  
+  const userData=await userModel.findOne({_id:userId})
+  if(userData){
+   return res
+    .status(200)
+    .json({ login: true, message: "login successful", userData});
+  }else{
+    return res
+    .status(404)
+    .json({ message: "userData not found", success:false });
+  }
+
+} catch (error) {
+  console.log(error);
+  res.status(500).json({ error: error.message, success: false });
+}
+  }
+
   
   module.exports={
     empRegister,
     verification,
     empGoogleRegister,
     empGoogleLogin,
-    empLogin
+    empLogin,
+     getUserData
   }

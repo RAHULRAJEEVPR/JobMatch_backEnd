@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createPost, getPostData,editPost,deletePost } = require("../controllers/postController");
+const { createPost, getPostData,editPost,deletePost,getSinglePostData ,changeApplicationStatus} = require("../controllers/postController");
 const { empAuthentication } = require("../middilewares/empAuth");
 const {
   empRegister,
@@ -8,6 +8,7 @@ const {
   empGoogleRegister,
   empGoogleLogin,
   empLogin,
+  getUserData
 } = require("../controllers/empController");
 const { skillDetails } = require("../controllers/skillController");
 const { cityDetails } = require("../controllers/cityController");
@@ -23,4 +24,8 @@ router.post("/createPost", empAuthentication, createPost);
 router.post("/editPost/:id", empAuthentication, editPost);
 router.post("/deletePost", empAuthentication, deletePost);
 router.get("/getpostdata", empAuthentication,getPostData);
+router.get("/getsinglepostdata/:postId", empAuthentication, getSinglePostData);
+router.get("/getuserdata/:userId",empAuthentication,getUserData)
+router.get("/changeapplicationstatus/:postId/:userId/:newStatus",empAuthentication,changeApplicationStatus)
+
 module.exports = router;
