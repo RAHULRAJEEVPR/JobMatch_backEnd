@@ -63,10 +63,16 @@ const postSchema = new mongoose.Schema({
         required:true
       }
     },
+  ],  
+  invites:[{userId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+    required: true,
+  }}
   ],
   status: {
     type: String,
-    default: "active",
+    default: "Active",
   },
   vacancy: {
     type: Number,

@@ -6,9 +6,7 @@ const jwt= require("jsonwebtoken")
 
 const adminLogin=async(req,res)=>{
   try {
-    console.log("keriya");
    const {email,password}=req.body
-  console.log(email);
     const adminData= await adminModel.findOne({email:"admin@gmail.com"})
    
     if(!adminData){
@@ -18,7 +16,6 @@ const adminLogin=async(req,res)=>{
     if(password!==adminData.password){
      return   res.status(401).json({message:"invalid password",login:false})
     }
-    console.log(adminData._id);
     const token=jwt.sign({id:adminData._id},process.env.JWT_SECRET,{expiresIn:300000})
     res.status(200).json({login:true,message:"login succesfull", token: token})
   } catch (error) {
@@ -32,7 +29,6 @@ const userDetails=async(req,res)=>{
   try {
     const  userData=await userModel.find({})
     if(userData){
-      console.log(userData);
       res.status(200).json({data:true,message:" succesfull",userData})
     }else{
       res.status(400).json({ error: error.message, messsage:"data not found"});
@@ -48,7 +44,6 @@ const empDetails=async(req,res)=>{
   try {
     const  empData=await empModel.find({})
     if(empData){
-      console.log(empData);
       res.status(200).json({data:true,message:" succesfull",empData})
     }else{
       res.status(400).json({ error: error.message, messsage:"data not found"});

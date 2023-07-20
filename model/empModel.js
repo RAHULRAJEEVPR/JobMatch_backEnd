@@ -20,6 +20,19 @@ const empSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  imageId:{
+    type:String
+  },
+  about:{
+    type:String
+  },
+  phone:{
+    type:String
+    
+  },
+  location:{
+    type:String
+  }
 });
 
 const empModel = mongoose.model("employers", empSchema );

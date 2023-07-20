@@ -1,11 +1,14 @@
 const userModel = require("../model/userModel");
+const empModal = require("../model/empModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const tokenModel = require("../model/token");
 const sendMail = require("../utils/nodeMailer");
 const crypto = require("crypto");
-const {uploadToCloudinary,removeFromCloudinary}=require("../config/cloudinary")
-
+const {
+  uploadToCloudinary,
+  removeFromCloudinary,
+} = require("../config/cloudinary");
 
 const userRegister = async (req, res) => {
   try {
@@ -27,12 +30,13 @@ const userRegister = async (req, res) => {
       email: email,
       password: password,
     });
-    let user = await newUser.save().then(console.log("updated"));
+    let user = await newUser.save();
 
     const token = await new tokenModel({
       userId: user._id,
       token: crypto.randomBytes(32).toString("hex"),
     }).save();
+    console.log(token,"tokennn");
     const url = `${process.env.BASE_URL}user/${user._id}/verify/${token.token}`;
     await sendMail(user.email, "verify Email", url);
     res.status(201).json({
@@ -50,7 +54,7 @@ const verification = async (req, res) => {
   try {
     console.log("verfiy");
     const user = await userModel.findOne({ _id: req.params.id });
-    console.log(user);
+
     if (!user) {
       return res.status(400).json({ message: "invalid link" });
     }
@@ -58,7 +62,7 @@ const verification = async (req, res) => {
       userId: user._id,
       token: req.params.token,
     });
-    console.log(token);
+
     if (!token) {
       return res.status(400).json({ message: "invalid Link" });
     }
@@ -95,7 +99,7 @@ const userGoogleRegister = async (req, res) => {
       isGoogle: true,
     });
 
-    await newUser.save().then(console.log("updated"));
+    await newUser.save();
     res.status(201).json({
       userId: newUser._id,
       created: true,
@@ -110,13 +114,12 @@ const userGoogleRegister = async (req, res) => {
 const userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email);
+
     const userData = await userModel.findOne({ email: email });
-    console.log("vanno1");
+
     if (!userData) {
       return res.status(404).json({ message: "invalid email", login: false });
     }
-    console.log(userData);
 
     const isMatch = await bcrypt.compare(password, userData.password);
     if (!isMatch) {
@@ -149,13 +152,13 @@ const userLogin = async (req, res) => {
 const userGoogleLogin = async (req, res) => {
   try {
     const { email, id } = req.body;
-    console.log(email);
+
     const userData = await userModel.findOne({ email: email });
-    console.log("google vanno");
+
     if (!userData) {
       return res.status(404).json({ message: "invalid email", login: false });
     }
-    console.log(userData);
+
     const isMatch = await bcrypt.compare(id, userData.password);
     if (!isMatch) {
       return res
@@ -173,13 +176,12 @@ const userGoogleLogin = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message );
     res.status(500).json({ error: error.message, login: false });
   }
 };
 const isUserAuth = async (req, res) => {
   try {
-    console.log("vanno");
     const userData = await userModel.findOne({ _id: req.userId });
     if (!userData) {
       return res
@@ -202,7 +204,7 @@ const updateUserAbout = async (req, res) => {
       { $set: { about: about } },
       { new: true }
     );
-    console.log(userData);
+
     return res.status(200).json({ success: true, userData: userData });
   } catch (error) {
     console.log(error);
@@ -212,17 +214,17 @@ const updateUserAbout = async (req, res) => {
 const addUserExp = async (req, res) => {
   try {
     const { exp, role, company } = req.body;
-    console.log(exp);
+
     let userData = await userModel.findOne({ _id: req.userId });
     const newExp = {
       role: role,
       company: company,
       exp: exp,
     };
-    console.log(newExp);
+
     userData.workExp.push(newExp);
     await userData.save();
-    console.log(userData);
+
     return res.status(200).json({ success: true, userData: userData });
   } catch (error) {
     console.log(error);
@@ -232,12 +234,12 @@ const addUserExp = async (req, res) => {
 const addUserSkill = async (req, res) => {
   try {
     const skill = req.body;
-    console.log(req.body);
+
     let userData = await userModel.findOne({ _id: req.userId });
     const newSkills = skill.filter((skill) => !userData.skills.includes(skill));
     userData.skills.push(...skill);
     await userData.save();
-    console.log(userData);
+
     return res.status(200).json({ success: true, userData: userData });
   } catch (error) {
     console.log(error);
@@ -266,7 +268,7 @@ const dropUserSkill = async (req, res) => {
 const addUserEdu = async (req, res) => {
   try {
     const { course, Institute } = req.body;
-    console.log(course);
+
     let userData = await userModel.findOne({ _id: req.userId });
     const newEdu = {
       course: course,
@@ -275,7 +277,7 @@ const addUserEdu = async (req, res) => {
 
     userData.education.push(newEdu);
     await userData.save();
-    console.log(userData);
+
     return res.status(200).json({ success: true, userData: userData });
   } catch (error) {
     console.log(error);
@@ -293,7 +295,7 @@ const dropUserExp = async (req, res) => {
       { $pull: { workExp: { _id: id } } },
       { new: true }
     );
-    console.log(userData);
+
     return res.status(200).json({ success: true, userData });
   } catch (error) {
     console.log(error);
@@ -310,7 +312,7 @@ const dropUserEdu = async (req, res) => {
       { $pull: { education: { _id: id } } },
       { new: true }
     );
-    console.log(userData);
+
     return res.status(200).json({ success: true, userData });
   } catch (error) {
     console.log(error);
@@ -320,16 +322,16 @@ const dropUserEdu = async (req, res) => {
 
 const updateUserBasicInfo = async (req, res) => {
   try {
-    const { Location, Phone,name } = req.body;
+    const { Location, Phone, name } = req.body;
 
     const userId = req.userId;
 
     const userData = await userModel.findOneAndUpdate(
       { _id: userId },
-      { $set: { location: Location, phone: Phone,name:name } },
+      { $set: { location: Location, phone: Phone, name: name } },
       { new: true }
     );
-    // console.log(userData);
+
     return res.status(200).json({ success: true, userData });
   } catch (error) {
     console.log(error);
@@ -362,32 +364,45 @@ const changePassword = async (req, res) => {
 
 const changeUserImg = async (req, res) => {
   try {
-    
     const userId = req.userId;
 
     const image = req.file.path;
     let user = await userModel.findOne({ _id: userId });
-    console.log(user);
+
     if (user.imageId) {
       const responseData = await removeFromCloudinary(user.imageId);
     }
     const data = await uploadToCloudinary(image, "profilePictures");
 
-    if(data){
-      console.log(data);
+    if (data) {
       const userData = await userModel.findOneAndUpdate(
         { _id: userId },
         { $set: { image: data.url, imageId: data.public_id } },
         { new: true }
       );
-      return res
-      .status(200)
-      .json({ success: true, userData });
+      return res.status(200).json({ success: true, userData });
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, error: "Server Error" }); 
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
 
+const userGetEmpDetails = async (req, res) => {
+  try {
+    let empId = req.params.empId;
+    const empData = await empModal.findOne({ _id: empId });
+    if (!empData)
+      return res
+        .status(404)
+        .json({ success: false, message: "not data found" });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "data obtained", empData });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
   }
 };
 
@@ -408,4 +423,5 @@ module.exports = {
   updateUserBasicInfo,
   changePassword,
   changeUserImg,
+  userGetEmpDetails,
 };

@@ -17,7 +17,8 @@ const {
   dropUserEdu,
   updateUserBasicInfo,
   changePassword,
-  changeUserImg
+  changeUserImg,
+  userGetEmpDetails,
 } = require("../controllers/userController");
 const {
   userGetAllPosts,
@@ -26,7 +27,11 @@ const {
 } = require("../controllers/postController");
 const { cityDetails } = require("../controllers/cityController");
 const { skillDetails } = require("../controllers/skillController");
-const upload =require("../middilewares/multer")
+const upload = require("../middilewares/multer");
+const {
+  userApplications,
+  InvitedJobs,
+} = require("../controllers/postController");
 
 router.post("/register", userRegister);
 router.post("/googleRegister", userGoogleRegister);
@@ -38,16 +43,19 @@ router.get("/getallpost", userAuthentication, userGetAllPosts);
 router.get("/citydetails", userAuthentication, cityDetails);
 router.get("/skilldata", userAuthentication, skillDetails);
 router.get("/jobdetaileview/:id", userAuthentication, singleJobDetails);
-router.post("/applyjob", userAuthentication,upload.single("resume"),applyJob)
-router.post("/updateUserAbout", userAuthentication,updateUserAbout)
-router.post("/addUserExp", userAuthentication,addUserExp)
-router.post("/addUserSkill", userAuthentication,addUserSkill)
-router.post("/dropUserSkill", userAuthentication,dropUserSkill)
-router.post("/addUserEdu", userAuthentication,addUserEdu)
-router.post("/dropUserExp", userAuthentication,dropUserExp)
-router.post("/dropUserEdu", userAuthentication,dropUserEdu)
-router.post("/updateUserBasicInfo", userAuthentication,updateUserBasicInfo)
-router.post("/changeUserPassword", userAuthentication,changePassword)
-router.post("/changeUserImage", userAuthentication,upload.single("image"),changeUserImg)
+router.post("/applyjob", userAuthentication, upload.single("resume"), applyJob);
+router.post("/updateUserAbout", userAuthentication, updateUserAbout);
+router.post("/addUserExp", userAuthentication, addUserExp);
+router.post("/addUserSkill", userAuthentication, addUserSkill);
+router.post("/dropUserSkill", userAuthentication, dropUserSkill);
+router.post("/addUserEdu", userAuthentication, addUserEdu);
+router.post("/dropUserExp", userAuthentication, dropUserExp);
+router.post("/dropUserEdu", userAuthentication, dropUserEdu);
+router.post("/updateUserBasicInfo", userAuthentication, updateUserBasicInfo);
+router.post("/changeUserPassword", userAuthentication, changePassword);
+router.post("/changeUserImage",userAuthentication,upload.single("image"),changeUserImg);
+router.post("/userGetEmpDetails/:empId", userAuthentication, userGetEmpDetails);
+router.get("/getUserApplications/:status",userAuthentication,userApplications);
+router.get("/invitedjobs", userAuthentication, InvitedJobs);
 
 module.exports = router;

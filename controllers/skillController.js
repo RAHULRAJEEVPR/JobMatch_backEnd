@@ -3,7 +3,7 @@ const skillsModel = require("../model/skillModel");
 const addSkill = async (req, res) => {
   try {
     const { skill } = req.body;
-    console.log(skill);
+   
     const regex = new RegExp(skill, "i");
 
     let exists = await skillsModel.findOne({ skill: regex });
