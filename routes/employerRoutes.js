@@ -27,7 +27,8 @@ const {
 const { skillDetails } = require("../controllers/skillController");
 const { cityDetails } = require("../controllers/cityController");
 const upload =require("../middilewares/multer")
-
+const {userChat,createChat,findChat}=require("../controllers/chatController")
+const{getMessages,addMessage}=require("../controllers/messageController")
 
 router.post("/register", empRegister);
 router.get("/:id/verify/:token", verification);
@@ -51,4 +52,12 @@ router.post("/updatebasicinfo",empAuthentication,updateBasicInfo)
 router.post("/empsearchuser",empAuthentication,empUserSearch)
 router.post("/empinviteuser",empAuthentication,empUserInvite)
 
+// chat routes
+router.post("/createChat",createChat)
+router.get("/getChat/:userId",userChat)
+router.get("/findChat/:firstId/:secondId",findChat)
+
+// message
+router.post("/addMessage",addMessage)
+router.get("/getMessages/:chatId",getMessages)
 module.exports = router;
