@@ -33,6 +33,9 @@ const {
   InvitedJobs,
 } = require("../controllers/postController");
 
+const {userChat,createChat,findChat}=require("../controllers/chatController")
+const{getMessages,addMessage}=require("../controllers/messageController")
+
 router.post("/register", userRegister);
 router.post("/googleRegister", userGoogleRegister);
 router.post("/googleLogin", userGoogleLogin);
@@ -57,5 +60,14 @@ router.post("/changeUserImage",userAuthentication,upload.single("image"),changeU
 router.post("/userGetEmpDetails/:empId", userAuthentication, userGetEmpDetails);
 router.get("/getUserApplications/:status",userAuthentication,userApplications);
 router.get("/invitedjobs", userAuthentication, InvitedJobs);
+
+// chat routes
+router.post("/createChat",createChat)
+router.get("/getChat/:userId",userChat)
+router.get("/findChat/:firstId/:secondId",findChat)
+
+// message
+router.post("/addMessage",addMessage)
+router.get("/getMessages/:chatId",getMessages)
 
 module.exports = router;

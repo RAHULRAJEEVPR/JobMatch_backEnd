@@ -10,7 +10,7 @@ const addMessage=async(req,res)=>{
       })
       const result=await message.save()
       if(result){
-        return res.status(200).json(result)
+        return res.status(200).json({result})
       }
     } catch (error) {
         console.log(error);
@@ -21,8 +21,9 @@ const getMessages=async(req,res)=>{
     try {
         const {chatId}=req.params
         const result=await messageModel.find({chatId})
+        
         if(result){
-            return res.status(200).json(result)
+            return res.status(200).json({result})
           }
     } catch (error) {
         console.log(error);

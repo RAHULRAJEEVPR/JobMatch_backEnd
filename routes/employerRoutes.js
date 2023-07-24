@@ -45,7 +45,7 @@ router.get("/getpostdata", empAuthentication, getPostData);
 router.get("/getactivepostdata", empAuthentication, getActivePostData);
 router.get("/getsinglepostdata/:postId", empAuthentication, getSinglePostData);
 router.get("/getuserdata/:userId", empAuthentication, getUserData);
-router.get("/changeapplicationstatus/:postId/:userId/:newStatus",empAuthentication,changeApplicationStatus);
+router.get("/changeapplicationstatus/:postId/:applicationId/:newStatus/:userId",empAuthentication,changeApplicationStatus);
 router.post("/changeImage",empAuthentication,upload.single("image"),changeImg)
 router.post("/updateabout",empAuthentication,updateAbout)
 router.post("/updatebasicinfo",empAuthentication,updateBasicInfo)

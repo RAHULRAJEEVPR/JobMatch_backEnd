@@ -1,5 +1,7 @@
 const postModel = require("../model/postModel");
 const { uploadToCloudinary } = require("../config/cloudinary");
+const sendMail = require("../utils/nodeMailer");
+const userModal = require("../model/userModel");
 
 // empoyer apis
 
@@ -205,7 +207,7 @@ const singleJobDetails = async (req, res) => {
   try {
     console.log("aaa");
     const id = req.params.id;
-console.log(id,"haii");
+    console.log(id, "haii");
     let postData = await postModel.findOne({ _id: id }).populate("empId");
 
     if (postData) {
@@ -264,7 +266,7 @@ const getSinglePostData = async (req, res) => {
     console.log(postId);
     const postData = await postModel
       .findOne({ _id: postId })
-      .populate("applicants.applicant");
+      .populate("applicants.applicant")
     if (postData) {
       return res
         .status(200)
@@ -283,20 +285,34 @@ const getSinglePostData = async (req, res) => {
 };
 const changeApplicationStatus = async (req, res) => {
   try {
-    const { postId, userId, newStatus } = req.params;
+    const { postId, applicationId, newStatus,userId } = req.params;
+ console.log(userId,"id");
 
     let postData = await postModel
       .findOneAndUpdate(
-        { _id: postId, "applicants._id": userId },
+        { _id: postId, "applicants._id": applicationId },
         { $set: { "applicants.$.status": newStatus } },
         { new: true }
       )
-      .populate("applicants.applicant");
+      .populate("applicants.applicant").populate("empId")
     if (!postData) {
       return res
         .status(404)
         .json({ success: false, message: "post not found" });
     }
+    const userData = await userModal.findOne({ _id: userId });
+    let message=""
+    if (newStatus == "Selected") {
+       message = `Congratulations  on your selection! We are thrilled to inform you that your application for the ${postData.role} position has been chosen by ${postData.empId.cmpName}.
+       Your skills and experience stood out among the applicants, and we believe you will be a valuable addition to our team.
+         Welcome aboard!`;
+    } else if (newStatus == "Rejected") {
+       message = `We regret to inform you that your job application for the ${postData.role} position has been rejected by ${postData.empId.cmpName}.
+        We appreciate your interest in our company and wish you the best in your future endeavors.`;
+    }
+    await sendMail (userData.email,"Application Status",message)
+    
+    
     return res
       .status(200)
       .json({ success: true, message: "updated successfully", postData });
@@ -334,47 +350,53 @@ const userApplications = async (req, res) => {
       .json({ success: false, message: "something went wrong" });
   }
 };
-const empUserInvite=async(req,res)=>{
+const empUserInvite = async (req, res) => {
   try {
     console.log(req.body);
-    const {userId,postId}=req.body
-    const postData=await postModel.findOne({_id:postId})
-    const alreadyInvited = postData.invites.some(invite => invite.userId.toString() === userId);
+    const { userId, postId } = req.body;
+    const postData = await postModel.findOne({ _id: postId });
+    const alreadyInvited = postData.invites.some(
+      (invite) => invite.userId.toString() === userId
+    );
     if (alreadyInvited) {
-      return res.status(200).json({ success: false, message: "User already invited" ,postData });
+      return res
+        .status(200)
+        .json({ success: false, message: "User already invited", postData });
     }
-    const newUser={
-      userId:userId
-    }
-    postData.invites.push(newUser)
-    await postData.save()
+    const newUser = {
+      userId: userId,
+    };
+    postData.invites.push(newUser);
+    await postData.save();
     console.log(postData);
-    return res.status(200).json({succes:true,message:"invited successfully",postData})
+    return res
+      .status(200)
+      .json({ succes: true, message: "invited successfully", postData });
   } catch (error) {
     console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "internal server error" });
   }
-}
+};
 const InvitedJobs = async (req, res) => {
   try {
     const userId = req.userId;
-    const postData = await postModel.find({ "invites.userId": userId }).populate("empId")
-   if(postData){
-    return res.status(200).json({success:true,postData})
-   }else{
-    return res.status(200).json({success:true,postDat:[]})
-   }
-   
+    const postData = await postModel
+      .find({ "invites.userId": userId })
+      .populate("empId");
+    if (postData) {
+      return res.status(200).json({ success: true, postData });
+    } else {
+      return res.status(200).json({ success: true, postDat: [] });
+    }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res
       .status(500)
-      .json({ success: false,error, message: "internal server error" });
+      .json({ success: false, error, message: "internal server error" });
   }
 };
-
 
 module.exports = {
   createPost,
@@ -390,5 +412,5 @@ module.exports = {
   userApplications,
   getActivePostData,
   empUserInvite,
-  InvitedJobs
+  InvitedJobs,
 };

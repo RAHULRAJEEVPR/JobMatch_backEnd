@@ -182,6 +182,7 @@ try {
   
   const userData=await userModel.findOne({_id:userId})
   if(userData){
+    
    return res
     .status(200)
     .json({ login: true, message: "login successful", userData});

@@ -3,8 +3,7 @@
 
 module.exports=async(email,subject,text)=>{
     try {
-        console.log(process.env.USER); 
-        console.log(process.env.PASS); 
+    
         const transporter = nodemailer.createTransport({
             host:process.env.HOST,
             service:process.env.SERVICE,

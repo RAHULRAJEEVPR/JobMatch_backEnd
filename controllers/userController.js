@@ -364,6 +364,7 @@ const changePassword = async (req, res) => {
 
 const changeUserImg = async (req, res) => {
   try {
+    console.log("vanno");
     const userId = req.userId;
 
     const image = req.file.path;
@@ -373,7 +374,7 @@ const changeUserImg = async (req, res) => {
       const responseData = await removeFromCloudinary(user.imageId);
     }
     const data = await uploadToCloudinary(image, "profilePictures");
-
+console.log(data);
     if (data) {
       const userData = await userModel.findOneAndUpdate(
         { _id: userId },
