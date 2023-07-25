@@ -2,6 +2,7 @@ const postModel = require("../model/postModel");
 const { uploadToCloudinary } = require("../config/cloudinary");
 const sendMail = require("../utils/nodeMailer");
 const userModal = require("../model/userModel");
+const empModal = require("../model/empModel");
 
 // empoyer apis
 
@@ -39,6 +40,11 @@ const createPost = async (req, res) => {
         .status(400)
         .json({ success: false, message: "something went wrong" });
     }
+    const update = await empModal.updateOne(
+      { _id: req.empId },
+      { $inc: { postCount: 1 } }
+    );
+
     return res
       .status(200)
       .json({ success: true, message: "created successfully" });
@@ -266,7 +272,7 @@ const getSinglePostData = async (req, res) => {
     console.log(postId);
     const postData = await postModel
       .findOne({ _id: postId })
-      .populate("applicants.applicant")
+      .populate("applicants.applicant");
     if (postData) {
       return res
         .status(200)
@@ -285,8 +291,8 @@ const getSinglePostData = async (req, res) => {
 };
 const changeApplicationStatus = async (req, res) => {
   try {
-    const { postId, applicationId, newStatus,userId } = req.params;
- console.log(userId,"id");
+    const { postId, applicationId, newStatus, userId } = req.params;
+    console.log(userId, "id");
 
     let postData = await postModel
       .findOneAndUpdate(
@@ -294,25 +300,25 @@ const changeApplicationStatus = async (req, res) => {
         { $set: { "applicants.$.status": newStatus } },
         { new: true }
       )
-      .populate("applicants.applicant").populate("empId")
+      .populate("applicants.applicant")
+      .populate("empId");
     if (!postData) {
       return res
         .status(404)
         .json({ success: false, message: "post not found" });
     }
     const userData = await userModal.findOne({ _id: userId });
-    let message=""
+    let message = "";
     if (newStatus == "Selected") {
-       message = `Congratulations  on your selection! We are thrilled to inform you that your application for the ${postData.role} position has been chosen by ${postData.empId.cmpName}.
+      message = `Congratulations  on your selection! We are thrilled to inform you that your application for the ${postData.role} position has been chosen by ${postData.empId.cmpName}.
        Your skills and experience stood out among the applicants, and we believe you will be a valuable addition to our team.
          Welcome aboard!`;
     } else if (newStatus == "Rejected") {
-       message = `We regret to inform you that your job application for the ${postData.role} position has been rejected by ${postData.empId.cmpName}.
+      message = `We regret to inform you that your job application for the ${postData.role} position has been rejected by ${postData.empId.cmpName}.
         We appreciate your interest in our company and wish you the best in your future endeavors.`;
     }
-    await sendMail (userData.email,"Application Status",message)
-    
-    
+    await sendMail(userData.email, "Application Status", message);
+
     return res
       .status(200)
       .json({ success: true, message: "updated successfully", postData });

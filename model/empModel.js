@@ -32,6 +32,13 @@ const empSchema = new mongoose.Schema({
   },
   location:{
     type:String
+  },isPremium:{
+    type:Boolean,
+    default:false
+  },
+  postCount:{
+    type:Number,
+    default:0,
   }
 });
 

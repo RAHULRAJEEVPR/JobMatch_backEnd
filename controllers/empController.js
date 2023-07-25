@@ -6,6 +6,7 @@ const tokenModel = require("../model/token");
 const sendMail = require("../utils/nodeMailer");
 const crypto = require("crypto");
 const {uploadToCloudinary,removeFromCloudinary}=require("../config/cloudinary")
+const stripe=require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 
 const empRegister = async (req, res) => {
@@ -293,6 +294,50 @@ const empUserSearch = async (req, res) => {
   }
 };
 
+
+const premium = async (req, res) => {
+  try {
+    console.log("varunindo");
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: 'inr',
+            product_data: {
+              name: 'JobMatch Premium'
+            },
+            unit_amount: 1000 * 100
+          },
+          quantity: 1
+        }
+      ],
+      success_url: `${process.env.BASE_URL}/employer/paymentSuccess/${req.empId}`,
+      cancel_url: `${process.env.BASE_URL}/employer/subscription`,
+    });
+console.log(session.url);
+    res.status(200).json({ url: session.url });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+};
+
+const updatePremium=async(req,res)=>{
+  try {
+    const {empId}=req.params
+    const updated=await empModel.findOneAndUpdate({_id:empId},{$set:{isPremium:true}},{ new: true })
+    if(!updated){
+      res.status(404).json({message:"employer data not found"})
+    }
+    res.status(200).json({updated})
+  } catch (error) {
+    res.status(500).json({error})
+    console.log(error);
+  }
+}
+
   
   module.exports={
     empRegister,
@@ -304,5 +349,7 @@ const empUserSearch = async (req, res) => {
      changeImg,
      updateAbout,
      updateBasicInfo,
-     empUserSearch
+     empUserSearch,
+     premium,
+     updatePremium
   }

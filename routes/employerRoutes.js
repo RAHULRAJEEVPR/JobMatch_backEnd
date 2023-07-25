@@ -22,7 +22,9 @@ const {
   changeImg,
   updateAbout,
   updateBasicInfo,
-  empUserSearch
+  empUserSearch,
+  premium,
+  updatePremium
 } = require("../controllers/empController");
 const { skillDetails } = require("../controllers/skillController");
 const { cityDetails } = require("../controllers/cityController");
@@ -60,4 +62,8 @@ router.get("/findChat/:firstId/:secondId",findChat)
 // message
 router.post("/addMessage",addMessage)
 router.get("/getMessages/:chatId",getMessages)
+
+//stripe
+router.post("/subscription",empAuthentication,premium)
+router.post("/verifypayment/:empId",empAuthentication,updatePremium)
 module.exports = router;
