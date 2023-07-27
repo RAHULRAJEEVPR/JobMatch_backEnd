@@ -9,7 +9,7 @@ const citysSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-});
+},{timestamps:true});
 
 const citysModel = mongoose.model("citys", citysSchema);
 module.exports = citysModel;

@@ -4,6 +4,6 @@ const skillsSchema=new mongoose.Schema({
         type:String,
         required:true
     }
-})
+},{timestamps:true})
 const skillsModel=mongoose.model("skills",skillsSchema)
 module.exports=skillsModel

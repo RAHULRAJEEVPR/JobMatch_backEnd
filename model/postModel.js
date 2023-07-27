@@ -78,7 +78,12 @@ const postSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-});
+  block:{
+    type:Boolean,
+    default:false,
+    required:true
+  }
+},{timestamps:true});
 
 const postModel=mongoose.model("posts",postSchema)
 

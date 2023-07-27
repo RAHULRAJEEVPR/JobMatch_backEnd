@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema({
   isGoogle: {
     type: Boolean,
   },
+  status:{
+    type:Boolean,
+    required:true,
+    default:true
+  },
   workExp: [
     {
       role: {
@@ -67,7 +72,7 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
-});
+},{timestamps:true});
 
 const userModel = mongoose.model("users", userSchema);
 

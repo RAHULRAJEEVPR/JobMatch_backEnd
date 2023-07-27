@@ -31,6 +31,7 @@ const upload = require("../middilewares/multer");
 const {
   userApplications,
   InvitedJobs,
+  reportJob
 } = require("../controllers/postController");
 
 const {userChat,createChat,findChat}=require("../controllers/chatController")
@@ -60,6 +61,7 @@ router.post("/changeUserImage",userAuthentication,upload.single("image"),changeU
 router.post("/userGetEmpDetails/:empId", userAuthentication, userGetEmpDetails);
 router.get("/getUserApplications/:status",userAuthentication,userApplications);
 router.get("/invitedjobs", userAuthentication, InvitedJobs);
+router.post("/reportjob",userAuthentication,reportJob)
 
 // chat routes
 router.post("/createChat",createChat)

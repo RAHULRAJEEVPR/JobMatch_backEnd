@@ -177,6 +177,21 @@ const empRegister = async (req, res) => {
 
 
 
+  const empAuth=async(req,res)=>{
+    try {
+      const empData=await empModel.findOne({_id:req.empId})
+      if (!empData) {
+        return res
+          .status(404)
+          .json({ message: "authentication failed", success: false });
+      } else {
+        return res.status(200).json({ success: true, empData });
+      }
+    } catch (error) {
+      
+    }
+  }
+
   const getUserData=async(req,res)=>{
 try {
   let userId=req.params.userId
@@ -351,5 +366,6 @@ const updatePremium=async(req,res)=>{
      updateBasicInfo,
      empUserSearch,
      premium,
-     updatePremium
+     updatePremium,
+     empAuth
   }

@@ -24,7 +24,8 @@ const {
   updateBasicInfo,
   empUserSearch,
   premium,
-  updatePremium
+  updatePremium,
+  empAuth
 } = require("../controllers/empController");
 const { skillDetails } = require("../controllers/skillController");
 const { cityDetails } = require("../controllers/cityController");
@@ -37,6 +38,8 @@ router.get("/:id/verify/:token", verification);
 router.post("/googleRegister", empGoogleRegister);
 router.post("/googleLogin", empGoogleLogin);
 router.post("/Login", empLogin);
+router.get("/empAuth",empAuthentication,empAuth)
+
 router.get("/skillData", empAuthentication, skillDetails);
 router.get("/cityData", empAuthentication, cityDetails);
 router.post("/createPost", empAuthentication, createPost);

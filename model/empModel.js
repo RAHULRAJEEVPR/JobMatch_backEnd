@@ -20,6 +20,11 @@ const empSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  status:{
+    type:Boolean,
+    required:true,
+    default:true
+  },
   imageId:{
     type:String
   },
@@ -40,7 +45,7 @@ const empSchema = new mongoose.Schema({
     type:Number,
     default:0,
   }
-});
+},{timestamps:true});
 
 const empModel = mongoose.model("employers", empSchema );
 
