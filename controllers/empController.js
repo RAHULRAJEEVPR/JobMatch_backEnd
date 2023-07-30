@@ -342,11 +342,11 @@ console.log(session.url);
 const updatePremium=async(req,res)=>{
   try {
     const {empId}=req.params
-    const updated=await empModel.findOneAndUpdate({_id:empId},{$set:{isPremium:true}},{ new: true })
-    if(!updated){
+    const empData=await empModel.findOneAndUpdate({_id:empId},{$set:{isPremium:true}},{ new: true })
+    if(!empData){
       res.status(404).json({message:"employer data not found"})
     }
-    res.status(200).json({updated})
+    res.status(200).json({empData})
   } catch (error) {
     res.status(500).json({error})
     console.log(error);

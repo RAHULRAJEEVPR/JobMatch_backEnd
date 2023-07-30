@@ -18,7 +18,7 @@ const adminLogin = async (req, res) => {
         .status(401)
         .json({ message: "invalid password", login: false });
     }
-    const token = jwt.sign({ id: adminData._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: adminData._id ,Role:"admin"}, process.env.JWT_SECRET, {
       expiresIn: 300000,
     });
     res
@@ -136,7 +136,7 @@ const revenue = async (req, res) => {
     const count = await empModel.countDocuments({
       isPremium: true,
     });
-    res.json({ revenue:count*1000, message: "revenue count obtained" }); // Sending the count as JSON response
+    res.json({ revenue:count, message: "revenue count obtained" }); // Sending the count as JSON response
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }

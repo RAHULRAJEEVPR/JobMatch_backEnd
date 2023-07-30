@@ -14,7 +14,7 @@ module.exports.empAuthentication=async(req,res,next)=>{
             }
           });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     return res.status(401).json({ message: "Auth failed", success: false });
     }
 }

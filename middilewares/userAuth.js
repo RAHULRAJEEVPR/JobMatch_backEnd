@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userModal = require("../model/userModel");
-const { findOne } = require("../model/postModel");
+
 module.exports.userAuthentication = async (req, res, next) => {
   try {
     const token = req.headers["authorization"].split(" ")[1];
@@ -20,7 +20,7 @@ module.exports.userAuthentication = async (req, res, next) => {
 
     // }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(401).json({ message: "Auth failed", success: false });
   }
 };
