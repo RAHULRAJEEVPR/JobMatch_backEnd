@@ -134,7 +134,7 @@ const userLogin = async (req, res) => {
         login: false,
       });
     } else {
-      const token = jwt.sign({ id: userData._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: userData._id,role:"user" }, process.env.JWT_SECRET, {
         expiresIn: 3000000,
       });
       res.status(200).json({
@@ -165,7 +165,7 @@ const userGoogleLogin = async (req, res) => {
         .status(401)
         .json({ message: "invalid passowrd", login: false });
     } else {
-      const token = jwt.sign({ id: userData._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: userData._id,role:"user" }, process.env.JWT_SECRET, {
         expiresIn: 300000,
       });
       res.status(200).json({

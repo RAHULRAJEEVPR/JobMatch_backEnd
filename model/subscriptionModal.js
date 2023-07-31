@@ -3,6 +3,7 @@ const mongoose =require("mongoose")
 const subscriptionSchema=new mongoose.Schema({
     empId:{
         type:mongoose.Schema.Types.ObjectId,
+        ref:"employers",
         required:true
     },
     amount:{

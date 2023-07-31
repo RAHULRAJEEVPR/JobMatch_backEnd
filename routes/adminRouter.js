@@ -10,7 +10,8 @@ const {
   changeEmpStatus,
   userCount ,
   empCount ,
-  revenue
+  revenue,
+  adminGetSubscriptionDetails
 } = require("../controllers/adminController");
 const {
   addSkill,
@@ -48,5 +49,6 @@ router.get("/revenue", adminAuthentication, revenue);
 router.get("/usercount", adminAuthentication, userCount ); 
 router.get("/empcount", adminAuthentication, empCount ); 
 router.get("/getreports", adminAuthentication, adminGetReportedPosts); 
+router.get("/subscriptiondetails", adminAuthentication, adminGetSubscriptionDetails); 
 
 module.exports = router;

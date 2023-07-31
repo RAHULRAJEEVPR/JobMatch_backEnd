@@ -1,11 +1,11 @@
 const empModel = require("../model/empModel");
 const userModel = require("../model/userModel");
 const subscriptionModal = require("../model/subscriptionModal");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const tokenModel = require("../model/token");
-const sendMail = require("../utils/nodeMailer");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+const sendMail = require("../utils/nodeMailer");
+const jwt = require("jsonwebtoken");
 const {
   uploadToCloudinary,
   removeFromCloudinary,
@@ -130,7 +130,7 @@ const empLogin = async (req, res) => {
         login: false,
       });
     } else {
-      const token = jwt.sign({ id: empData._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: empData._id,role:"emp" }, process.env.JWT_SECRET, {
         expiresIn: 300000,
       });
       res
@@ -158,7 +158,7 @@ const empGoogleLogin = async (req, res) => {
         .status(401)
         .json({ message: "invalid passowrd", login: false });
     } else {
-      const token = jwt.sign({ id: empData._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: empData._id ,role:"emp"}, process.env.JWT_SECRET, {
         expiresIn: 300000,
       });
       res

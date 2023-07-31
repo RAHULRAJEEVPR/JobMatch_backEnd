@@ -12,6 +12,7 @@ module.exports.adminAuthentication = async (req, res, next) => {
         next();
       }
     });
+    
   } catch (error) {
     // console.log(error);
     return res.status(401).json({ message: "Auth failed", success: false });
