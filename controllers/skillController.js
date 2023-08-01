@@ -3,7 +3,7 @@ const skillsModel = require("../model/skillModel");
 const addSkill = async (req, res) => {
   try {
     const { skill } = req.body;
-   
+
     const regex = new RegExp(skill, "i");
 
     let exists = await skillsModel.findOne({ skill: regex });
@@ -27,21 +27,18 @@ const addSkill = async (req, res) => {
 
 const skillDetails = async (req, res) => {
   try {
-    const skillData = await skillsModel.find({});
-    if (skillData) {
-     
-      res.status(200).json({ data: true, message: " succesfull", skillData });
+    const skillData = await skillsModel.findOne({});
+    if (skillData && skillData.length > 0) {
+      res.status(200).json({ data: true, message: "Success", skillData });
     } else {
-      res
-        .status(400)
-        .json({ error: error.message, messsage: "data not found" });
+      res.status(200).json({data:false, message: "Data not found" });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message, login: false });
-
-    console.log(error.message);
+    res.status(500).json({ error: "Internal server error", login: false });
   }
 };
+
+
 const dropSkill = async (req, res) => {
   try {
     const { id } = req.body;
@@ -51,19 +48,16 @@ const dropSkill = async (req, res) => {
         .status(200)
         .json({ droped: true, message: " Droped successfully" });
     } else {
-      res
-        .status(500)
-        .json({
-          error: error.message,
-          message: "something went wrong",
-          droped: false,
-        });
+      res.status(500).json({
+        error: error.message,
+        message: "something went wrong",
+        droped: false,
+      });
     }
   } catch (error) {
     res.status(500).json({ error: error.message, droped: false });
   }
 };
-
 
 module.exports = {
   addSkill,

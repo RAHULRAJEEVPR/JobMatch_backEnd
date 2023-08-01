@@ -12,6 +12,8 @@ const {
 } = require("../config/cloudinary");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { v4: uuidv4 } = require("uuid");
+const BASE_URL = process.env.BASE_URL;
+const PREMIUM_PRICE_INR = 1000 * 100
 
 const empRegister = async (req, res) => {
   try {
@@ -309,7 +311,6 @@ const empUserSearch = async (req, res) => {
 
 const premium = async (req, res) => {
   try {
-    console.log("varunindo");
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -320,19 +321,19 @@ const premium = async (req, res) => {
             product_data: {
               name: "JobMatch Premium",
             },
-            unit_amount: 1000 * 100,
+            unit_amount: PREMIUM_PRICE_INR,
           },
           quantity: 1,
         },
       ],
-      success_url: `${process.env.BASE_URL}/employer/paymentSuccess/${req.empId}`,
-      cancel_url: `${process.env.BASE_URL}/employer/subscription`,
+      success_url: `${BASE_URL}/employer/paymentSuccess/${req.empId}`,
+      cancel_url: `${BASE_URL}/employer/subscription`,
     });
-    console.log(session.url);
+
     res.status(200).json({ url: session.url });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong." });
   }
 };
 
