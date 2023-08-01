@@ -9,7 +9,8 @@ const configureSocket = (server) => {
             cors: {
                   origin: [process.env.BASE_URL],
                   methods: ['GET', 'POST', 'PATCH'],
-                  // credentials: true
+                   credentials: true
+                   
             }
       })
 
