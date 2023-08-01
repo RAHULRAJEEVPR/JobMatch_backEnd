@@ -27,7 +27,7 @@ const addSkill = async (req, res) => {
 
 const skillDetails = async (req, res) => {
   try {
-    const skillData = await skillsModel.findOne({});
+    const skillData = await skillsModel.find({});
     if (skillData) {
       res.status(200).json({ data: true, message: " succesfull", skillData });
     } else {
