@@ -28,8 +28,8 @@ const addSkill = async (req, res) => {
 const skillDetails = async (req, res) => {
   try {
     const skillData = await skillsModel.findOne({});
-    if (skillData && skillData.length > 0) {
-      res.status(200).json({ data: true, message: "Success", skillData });
+    if (skillData) {
+      res.status(200).json({ data: true, message: " succesfull", skillData });
     } else {
       res.status(200).json({data:false, message: "Data not found" });
     }
