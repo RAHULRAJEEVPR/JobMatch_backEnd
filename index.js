@@ -23,7 +23,7 @@ app.use(express.json())
 app.use(cors({ 
   origin: [process.env.BASE_URL],
   methods: ["GET", "POST"],
-  credentials: true
+  // credentials: true
 }))
 app.use("/user",userRoute)
 app.use("/employer",empRouter)
