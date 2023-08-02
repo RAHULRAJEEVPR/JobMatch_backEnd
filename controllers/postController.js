@@ -4,6 +4,8 @@ const sendMail = require("../utils/nodeMailer");
 const userModal = require("../model/userModel");
 const empModal = require("../model/empModel");
 const reportModal=require("../model/reportsModal")
+require("dotenv").config();
+
 
 // empoyer apis
 
@@ -247,6 +249,7 @@ const applyJob = async (req, res) => {
       }
     }
     const data = await uploadToCloudinary(resume, "resumes");
+   console.log(data)
     const newapplicant = {
       applicant: req.userId,
       status: "Pending",

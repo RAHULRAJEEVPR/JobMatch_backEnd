@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const tokenModel = require("../model/token");
 const sendMail = require("../utils/nodeMailer");
 const crypto = require("crypto");
+require("dotenv").config();
+
 const {
   uploadToCloudinary,
   removeFromCloudinary,
@@ -395,7 +397,7 @@ const changeUserImg = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, error: "Server Error" });
+    return res.status(500).json({ success: false, error});
   }
 };
 

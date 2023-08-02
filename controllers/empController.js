@@ -6,6 +6,8 @@ const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const sendMail = require("../utils/nodeMailer");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
 const {
   uploadToCloudinary,
   removeFromCloudinary,
