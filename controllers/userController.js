@@ -36,9 +36,11 @@ const userRegister = async (req, res) => {
       userId: user._id,
       token: crypto.randomBytes(32).toString("hex"),
     }).save();
-    console.log(token,"tokennn");
-    const url = `${process.env.BASE_URL}user/${user._id}/verify/${token.token}`;
-    await sendMail(user.email, "verify Email", url);
+    console.log(token, "tokennn");
+    const url = `${process.env.BASE_URL}/user/${user._id}/verify/${token.token}`;
+
+    const send = await sendMail(user.email, "verify Email", url);
+
     res.status(201).json({
       userId: newUser._id,
       created: true,
@@ -134,9 +136,13 @@ const userLogin = async (req, res) => {
         login: false,
       });
     } else {
-      const token = jwt.sign({ id: userData._id,role:"user" }, process.env.JWT_SECRET, {
-        expiresIn: 3000000,
-      });
+      const token = jwt.sign(
+        { id: userData._id, role: "user" },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 3000000,
+        }
+      );
       res.status(200).json({
         login: true,
         message: "login successful",
@@ -165,9 +171,13 @@ const userGoogleLogin = async (req, res) => {
         .status(401)
         .json({ message: "invalid passowrd", login: false });
     } else {
-      const token = jwt.sign({ id: userData._id,role:"user" }, process.env.JWT_SECRET, {
-        expiresIn: 300000,
-      });
+      const token = jwt.sign(
+        { id: userData._id, role: "user" },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 300000,
+        }
+      );
       res.status(200).json({
         login: true,
         message: "login successful",
@@ -176,7 +186,7 @@ const userGoogleLogin = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error.message );
+    console.log(error.message);
     res.status(500).json({ error: error.message, login: false });
   }
 };
@@ -374,7 +384,7 @@ const changeUserImg = async (req, res) => {
       const responseData = await removeFromCloudinary(user.imageId);
     }
     const data = await uploadToCloudinary(image, "profilePictures");
-console.log(data);
+    console.log(data);
     if (data) {
       const userData = await userModel.findOneAndUpdate(
         { _id: userId },

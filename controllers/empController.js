@@ -39,7 +39,7 @@ const empRegister = async (req, res) => {
       userId: emp._id,
       token: crypto.randomBytes(32).toString("hex"),
     }).save();
-    const url = `${process.env.BASE_URL}employer/${emp._id}/verify/${token.token}`;
+    const url = `${process.env.BASE_URL}/employer/${emp._id}/verify/${token.token}`;
     await sendMail(emp.email, "verify Email", url);
 
     res.status(201).json({
