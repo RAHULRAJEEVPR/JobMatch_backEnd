@@ -9,7 +9,7 @@ module.exports.userAuthentication = async (req, res, next) => {
         return res.status(401).json({ message: "Auth failed", success: false });
       } else {
         req.userId = decoded.id;
-        next()
+        next();
       }
     });
     const user = await userModal.findOne({ _id: req.userId });

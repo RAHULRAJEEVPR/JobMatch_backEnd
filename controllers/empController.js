@@ -15,7 +15,7 @@ const {
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { v4: uuidv4 } = require("uuid");
 const BASE_URL = process.env.BASE_URL;
-const PREMIUM_PRICE_INR = 1000 * 100
+const PREMIUM_PRICE_INR = 1000 * 100;
 
 const empRegister = async (req, res) => {
   try {
@@ -134,9 +134,13 @@ const empLogin = async (req, res) => {
         login: false,
       });
     } else {
-      const token = jwt.sign({ id: empData._id,role:"emp" }, process.env.JWT_SECRET, {
-        expiresIn: 300000,
-      });
+      const token = jwt.sign(
+        { id: empData._id, role: "emp" },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 300000,
+        }
+      );
       res
         .status(200)
         .json({ login: true, message: "login successful", empData, token });
@@ -162,17 +166,19 @@ const empGoogleLogin = async (req, res) => {
         .status(401)
         .json({ message: "invalid passowrd", login: false });
     } else {
-      const token = jwt.sign({ id: empData._id ,role:"emp"}, process.env.JWT_SECRET, {
-        expiresIn: 300000,
+      const token = jwt.sign(
+        { id: empData._id, role: "emp" },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 300000,
+        }
+      );
+      res.status(200).json({
+        login: true,
+        message: "login successful",
+        token: token,
+        empData,
       });
-      res
-        .status(200)
-        .json({
-          login: true,
-          message: "login successful",
-          token: token,
-          empData,
-        });
     }
   } catch (error) {
     console.log(error.message);

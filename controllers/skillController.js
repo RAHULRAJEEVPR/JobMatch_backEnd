@@ -31,13 +31,12 @@ const skillDetails = async (req, res) => {
     if (skillData) {
       res.status(200).json({ data: true, message: " succesfull", skillData });
     } else {
-      res.status(200).json({data:false, message: "Data not found" });
+      res.status(200).json({ data: false, message: "Data not found" });
     }
   } catch (error) {
     res.status(500).json({ error: "Internal server error", login: false });
   }
 };
-
 
 const dropSkill = async (req, res) => {
   try {

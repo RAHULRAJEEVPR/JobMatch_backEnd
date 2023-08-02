@@ -31,11 +31,15 @@ const upload = require("../middilewares/multer");
 const {
   userApplications,
   InvitedJobs,
-  reportJob
+  reportJob,
 } = require("../controllers/postController");
 
-const {userChat,createChat,findChat}=require("../controllers/chatController")
-const{getMessages,addMessage}=require("../controllers/messageController")
+const {
+  userChat,
+  createChat,
+  findChat,
+} = require("../controllers/chatController");
+const { getMessages, addMessage } = require("../controllers/messageController");
 
 router.post("/register", userRegister);
 router.post("/googleRegister", userGoogleRegister);
@@ -57,19 +61,28 @@ router.post("/dropUserExp", userAuthentication, dropUserExp);
 router.post("/dropUserEdu", userAuthentication, dropUserEdu);
 router.post("/updateUserBasicInfo", userAuthentication, updateUserBasicInfo);
 router.post("/changeUserPassword", userAuthentication, changePassword);
-router.post("/changeUserImage",userAuthentication,upload.single("image"),changeUserImg);
+router.post(
+  "/changeUserImage",
+  userAuthentication,
+  upload.single("image"),
+  changeUserImg
+);
 router.post("/userGetEmpDetails/:empId", userAuthentication, userGetEmpDetails);
-router.get("/getUserApplications/:status",userAuthentication,userApplications);
+router.get(
+  "/getUserApplications/:status",
+  userAuthentication,
+  userApplications
+);
 router.get("/invitedjobs", userAuthentication, InvitedJobs);
-router.post("/reportjob",userAuthentication,reportJob)
+router.post("/reportjob", userAuthentication, reportJob);
 
 // chat routes
-router.post("/createChat",createChat)
-router.get("/getChat/:userId",userChat)
-router.get("/findChat/:firstId/:secondId",findChat)
+router.post("/createChat", createChat);
+router.get("/getChat/:userId", userChat);
+router.get("/findChat/:firstId/:secondId", findChat);
 
 // message
-router.post("/addMessage",addMessage)
-router.get("/getMessages/:chatId",getMessages)
+router.post("/addMessage", addMessage);
+router.get("/getMessages/:chatId", getMessages);
 
 module.exports = router;

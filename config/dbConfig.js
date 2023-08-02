@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
@@ -14,4 +13,4 @@ mongoose
     console.log(err);
   });
 
-  module.exports=mongoose
+module.exports = mongoose;

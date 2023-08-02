@@ -8,10 +8,10 @@ const {
   adminAuth,
   changeUserStatus,
   changeEmpStatus,
-  userCount ,
-  empCount ,
+  userCount,
+  empCount,
   revenue,
-  adminGetSubscriptionDetails
+  adminGetSubscriptionDetails,
 } = require("../controllers/adminController");
 const {
   addSkill,
@@ -27,7 +27,7 @@ const {
   adminGetAllPostData,
   singleJobDetails,
   adminGetReportedPosts,
-  changePostStatus
+  changePostStatus,
 } = require("../controllers/postController");
 
 router.post("/login", adminLogin);
@@ -44,11 +44,11 @@ router.post("/changeuserstatus", adminAuthentication, changeUserStatus);
 router.post("/changeempstatus", adminAuthentication, changeEmpStatus);
 router.post("/changepoststatus", adminAuthentication, changePostStatus);
 router.get("/allpost", adminAuthentication, adminGetAllPostData);
-router.get("/singlepost/:id", adminAuthentication, singleJobDetails); 
-router.get("/revenue", adminAuthentication, revenue); 
-router.get("/usercount", adminAuthentication, userCount ); 
-router.get("/empcount", adminAuthentication, empCount ); 
-router.get("/getreports", adminAuthentication, adminGetReportedPosts); 
-router.get("/subscriptiondetails", adminAuthentication, adminGetSubscriptionDetails); 
+router.get("/singlepost/:id", adminAuthentication, singleJobDetails);
+router.get("/revenue", adminAuthentication, revenue);
+router.get("/usercount", adminAuthentication, userCount);
+router.get("/empcount", adminAuthentication, empCount);
+router.get("/getreports", adminAuthentication, adminGetReportedPosts);
+router.get("/subscriptiondetails",adminAuthentication,adminGetSubscriptionDetails);
 
 module.exports = router;

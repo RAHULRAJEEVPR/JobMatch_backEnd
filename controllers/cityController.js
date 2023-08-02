@@ -27,7 +27,6 @@ const cityDetails = async (req, res) => {
   try {
     const cityData = await cityModel.find({});
     if (cityData) {
-     
       res.status(200).json({ data: true, message: " succesfull", cityData });
     } else {
       res
@@ -50,15 +49,12 @@ const dropCity = async (req, res) => {
         .status(200)
         .json({ droped: true, message: " Droped successfully" });
     } else {
-      res
-        .status(500)
-        .json({
-          error: error.message,
-          message: "something went wrong",
-          droped: false,
-        });
+      res.status(500).json({
+        error: error.message,
+        message: "something went wrong",
+        droped: false,
+      });
     }
-   
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ error: error.message, droped: false });

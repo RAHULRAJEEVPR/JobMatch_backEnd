@@ -3,9 +3,8 @@ const { uploadToCloudinary } = require("../config/cloudinary");
 const sendMail = require("../utils/nodeMailer");
 const userModal = require("../model/userModel");
 const empModal = require("../model/empModel");
-const reportModal=require("../model/reportsModal")
+const reportModal = require("../model/reportsModal");
 require("dotenv").config();
-
 
 // empoyer apis
 
@@ -37,7 +36,6 @@ const createPost = async (req, res) => {
       jobDescription: description,
     });
     let post = await newPost.save();
-    
 
     if (!post) {
       return res
@@ -46,12 +44,15 @@ const createPost = async (req, res) => {
     }
     const update = await empModal.findOneAndUpdate(
       { _id: req.empId },
-      { $inc: { postCount: 1 } },{ new: true }
+      { $inc: { postCount: 1 } },
+      { new: true }
     );
 
-    return res
-      .status(200)
-      .json({ success: true, message: "created successfully",empData:update });
+    return res.status(200).json({
+      success: true,
+      message: "created successfully",
+      empData: update,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: true, message: error.message });
@@ -100,7 +101,7 @@ const editPost = async (req, res) => {
     await post.save();
 
     let empId = req.empId;
-    let postData = await postModel.find({ empId: empId, }).populate("empId");
+    let postData = await postModel.find({ empId: empId }).populate("empId");
     if (postData) {
       return res.status(200).json({
         success: true,
@@ -114,7 +115,6 @@ const editPost = async (req, res) => {
   }
 };
 
-
 const deletePost = async (req, res) => {
   try {
     const postId = req.body.id;
@@ -124,7 +124,7 @@ const deletePost = async (req, res) => {
       return res.status(404).json({ error: true, message: "Post not found" });
     }
     let id = req.empId;
-    let postData = await postModel.find({ empId: id , }).populate("empId");
+    let postData = await postModel.find({ empId: id }).populate("empId");
     if (postData) {
       return res.status(200).json({
         success: true,
@@ -149,7 +149,7 @@ const completePost = async (req, res) => {
       return res.status(404).json({ error: true, message: "Post not found" });
     }
     let id = req.empId;
-    let postData = await postModel.find({ empId: id  }).populate("empId");
+    let postData = await postModel.find({ empId: id }).populate("empId");
     if (postData) {
       return res.status(200).json({
         success: true,
@@ -196,12 +196,13 @@ const getActivePostData = async (req, res) => {
     return res.status(500).json({ error: true, message: error.message });
   }
 };
-
 //user apis
 
 const userGetAllPosts = async (req, res) => {
   try {
-    let postData = await postModel.find({ status: "Active",block:{$ne:true} }).populate("empId");
+    let postData = await postModel
+      .find({ status: "Active", block: { $ne: true } })
+      .populate("empId");
 
     if (postData) {
       res.status(200).json({ data: true, message: "data obtained", postData });
@@ -249,7 +250,7 @@ const applyJob = async (req, res) => {
       }
     }
     const data = await uploadToCloudinary(resume, "resumes");
-   console.log(data)
+    console.log(data);
     const newapplicant = {
       applicant: req.userId,
       status: "Pending",
@@ -409,7 +410,7 @@ const InvitedJobs = async (req, res) => {
       .json({ success: false, error, message: "internal server error" });
   }
 };
-const adminGetAllPostData=async(req,res)=>{
+const adminGetAllPostData = async (req, res) => {
   try {
     let postData = await postModel.find({ status: "Active" }).populate("empId");
 
@@ -421,40 +422,46 @@ const adminGetAllPostData=async(req,res)=>{
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: true, message: error.message });
-  } 
-}
-const reportJob=async(req,res)=>{
+  }
+};
+const reportJob = async (req, res) => {
   try {
-    const {reason,postId}=req.body
+    const { reason, postId } = req.body;
 
-    const alreadyReported=await reportModal.findOne({postId:postId,reportedBy:req.userId})
-    if(alreadyReported){
-      return res.status(200).json({reported:false,message:"you have already reported this post"})
+    const alreadyReported = await reportModal.findOne({
+      postId: postId,
+      reportedBy: req.userId,
+    });
+    if (alreadyReported) {
+      return res.status(200).json({
+        reported: false,
+        message: "you have already reported this post",
+      });
     }
- const report=new reportModal({
-  postId,
-  reportedBy:req.userId,
-  reason
- })
- const reported=await report.save()
- if(reported){
- return res.status(200).json({reported:true,message:"Reported successfully"})
- }
+    const report = new reportModal({
+      postId,
+      reportedBy: req.userId,
+      reason,
+    });
+    const reported = await report.save();
+    if (reported) {
+      return res
+        .status(200)
+        .json({ reported: true, message: "Reported successfully" });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: true, message: error.message });
   }
-}
+};
 
 const adminGetReportedPosts = async (req, res) => {
   try {
-    
-    const reportedPosts = await reportModal.find({})
+    const reportedPosts = await reportModal
+      .find({})
       .populate("postId")
       .populate("reportedBy")
       .populate({ path: "postId", populate: { path: "empId" } });
- 
-   
 
     res.status(200).json({ message: "data obtained", reportedPosts });
   } catch (error) {
@@ -464,27 +471,26 @@ const adminGetReportedPosts = async (req, res) => {
 };
 const changePostStatus = async (req, res) => {
   try {
-    
-    console.log(req.body,"");
-    const {id,status}=req.body
-    const update=await postModel.updateOne({_id:id},{$set:{block:status}})
-if(update){
+    console.log(req.body, "");
+    const { id, status } = req.body;
+    const update = await postModel.updateOne(
+      { _id: id },
+      { $set: { block: status } }
+    );
+    if (update) {
+      const reportedPosts = await reportModal
+        .find({})
+        .populate("postId")
+        .populate("reportedBy")
+        .populate({ path: "postId", populate: { path: "empId" } });
 
-  const reportedPosts = await reportModal.find({})
-    .populate("postId")
-    .populate("reportedBy")
-    .populate({ path: "postId", populate: { path: "empId" } });
-
- 
-
-  res.status(200).json({ message: "data obtained", reportedPosts });
-}
+      res.status(200).json({ message: "data obtained", reportedPosts });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 module.exports = {
   createPost,
@@ -504,5 +510,5 @@ module.exports = {
   adminGetAllPostData,
   reportJob,
   adminGetReportedPosts,
-  changePostStatus
+  changePostStatus,
 };
