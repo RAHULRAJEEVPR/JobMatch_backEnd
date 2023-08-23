@@ -122,7 +122,7 @@ const userLogin = async (req, res) => {
     const userData = await userModel.findOne({ email: email });
 
     if (!userData) {
-      return res.status(404).json({ message: "invalid email", login: false });
+      return res.status(404).json({ message: " you are not a memeter please signup first", login: false });
     }
 
     const isMatch = await bcrypt.compare(password, userData.password);
@@ -164,7 +164,7 @@ const userGoogleLogin = async (req, res) => {
     const userData = await userModel.findOne({ email: email });
 
     if (!userData) {
-      return res.status(404).json({ message: "invalid email", login: false });
+      return res.status(404).json({ message: " you are not a memeter please signup first", login: false });
     }
 
     const isMatch = await bcrypt.compare(id, userData.password);

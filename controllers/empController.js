@@ -118,7 +118,7 @@ const empLogin = async (req, res) => {
     const empData = await empModel.findOne({ email: email });
     console.log("vanno1");
     if (!empData) {
-      return res.status(404).json({ message: "invalid email", login: false });
+      return res.status(404).json({ message: "you are not a memeter please signup first", login: false });
     }
 
     const isMatch = await bcrypt.compare(password, empData.password);
@@ -157,7 +157,7 @@ const empGoogleLogin = async (req, res) => {
     const empData = await empModel.findOne({ email: email });
 
     if (!empData) {
-      return res.status(404).json({ message: "invalid email", login: false });
+      return res.status(404).json({ message:"you are not a memeter please signup first", login: false });
     }
 
     const isMatch = await bcrypt.compare(id, empData.password);
