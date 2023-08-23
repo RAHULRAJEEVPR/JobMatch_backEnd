@@ -201,8 +201,10 @@ const getActivePostData = async (req, res) => {
 const userGetAllPosts = async (req, res) => {
   try {
     let postData = await postModel
-      .find({ status: "Active", block: { $ne: true } })
-      .populate("empId");
+    .find({ status: "Active", block: { $ne: true } })
+    .populate("empId")
+    .sort({ createdAt: -1 });
+  
 
     if (postData) {
       res.status(200).json({ data: true, message: "data obtained", postData });
